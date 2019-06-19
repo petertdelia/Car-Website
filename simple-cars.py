@@ -9,7 +9,7 @@ def display_cars_db():
     cars = db.execute(
         'SELECT * FROM cars'
     ).fetchall()
-    return str(cars)
+    return str(cars + "hi mom!")
     
 
 
