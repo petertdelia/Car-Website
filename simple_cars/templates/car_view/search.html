@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<button class="dropbtn">Trim</button>
+<div class="dropdown-content">
+    {% for trim in trims %}
+    <form method="post">
+        
+        <input type="button" name="{{ trim['trim'] }}" id="{{ trim['trim'] }}" value="{{ trim['trim'] }}">
+    </form>  
+    {% endfor %}
+</div>
+
+{% endblock %}

@@ -2,6 +2,7 @@
 
 {% block header %}
   <h1>{% block title %}Cars{% endblock %}</h1>
+  <a class="action" href="{{ url_for('cars.search') }}">Search!</a>
 {% endblock %}
 
 {% block content %}
