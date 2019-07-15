@@ -1,14 +1,21 @@
 {% extends 'base.html' %}
 
+{% block header %}
+  <h1>{% block title %}Search!{% endblock %}</h1>
+  <a class="action" href="{{ url_for('cars.index') }}">Back to Index</a>
+{% endblock %}
+
 {% block content %}
-<button class="dropbtn">Trim</button>
-<div class="dropdown-content">
-    {% for trim in trims %}
-    <form method="post">
-        
-        <input type="button" name="{{ trim['trim'] }}" id="{{ trim['trim'] }}" value="{{ trim['trim'] }}">
-    </form>  
-    {% endfor %}
+<div class="dropdown">
+    <button class="dropbtn">Trim</button>
+  <div class="dropdown-content">
+      {% for trim in trims %}
+      <form action="{{ url_for('cars.search') }}" method="post">
+          <input type="submit" name="trim" value="{{ trim['trim'] }}">
+      </form>  
+      {% endfor %}
+  </div>
 </div>
+
 
 {% endblock %}
