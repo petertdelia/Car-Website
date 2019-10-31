@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Search Results!{% endblock %}</h1>
+  <a class="action" href="{{ url_for('cars.index') }}">Back to Index</a>
+  <a class="action" href="{{ url_for('cars.search') }}">Back to Search</a>
+  <h2>{{ key }}: {{ value}}</h2>
+{% endblock %}
+
+{% block content %}
+  {% for car in cars %}
+    <article class="cars">
+        <header>
+            <div>
+                <h1>{{ car['year'] }}</h1>
+                <div class="about">Make: {{ car['make'] }}</div>
+                <div class="about">Model: {{ car['model'] }}</div>
+                <div class="about">Trim: {{ car['trim'] }}</div>
+                <div class="about">Drive: {{ car['drive'] }}</div>
+                <div class="about">Mileage: {{ car['mileage'] }}</div>
+                <div class="about">Price: {{ car['price'] }}</div>
+            </div>
+        </header>
+    </article>
+  {% endfor %}
+    <div class="pagination">
+      <a href="{{ url_for('cars.search_results') }}?page=0&key={{ key }}&value={{ value }}">first</a>
+      <a href="{{ url_for('cars.search_results') }}?page={{ page_number - 1 }}&key={{ key }}&value={{ value }}">prev</a>
+      {{ page_number }}
+      <a href="{{ url_for('cars.search_results') }}?page={{ page_number + 1 }}&key={{ key }}&value={{ value }}">next</a>
+      <a href="{{ url_for('cars.search_results') }}?page=-1&key={{ key }}&value={{ value }}">last</a>
+    </div>
+{% endblock %}
