@@ -10,8 +10,9 @@ def index():
     page_number = int(request.args.get('page', '0'))
 
     db = get_db()
+    sortBy = request.args.get('sortBy', 'year')
     cars = db.execute(
-        'SELECT year,make,model,trim,drive,mileage,price FROM cars ORDER BY price'
+        'SELECT year,make,model,trim,drive,mileage,price FROM cars ORDER BY ' + sortBy
     ).fetchall()
 
     if page_number == -1:
@@ -19,12 +20,15 @@ def index():
 
     cars = cars[10 * page_number : 10 * (page_number + 1)]
 
-    return render_template('car_view/cars.html', cars=cars, page_number=page_number)
+    return render_template('car_view/index.html', cars=cars, page_number=page_number)
 
 @bp.route('/cars/search', methods=('GET','POST'))
 def search():
     
     db = get_db()
+    models = db.execute(
+        'SELECT DISTINCT model FROM cars'
+    ).fetchall()
     trims = db.execute(
         'SELECT DISTINCT trim FROM cars'
     ).fetchall()
@@ -32,7 +36,7 @@ def search():
         'SELECT DISTINCT drive FROM cars'
     ).fetchall()
 
-    return render_template('car_view/search.html', trims=trims, drives=drives)
+    return render_template('car_view/search.html', trims=trims, drives=drives, models=models)
 
 @bp.route('/cars/search_results', methods=('GET','POST'))
 def search_results():
@@ -79,3 +83,7 @@ def search_results():
     cars = cars[10 * page_number : 10 * (page_number + 1)]
     
     return render_template('car_view/search_results.html', cars=cars, page_number=page_number, key=key, value=value)
+
+@bp.route('/cars/individual_view')
+def view():
+    return 'hello, car!'

@@ -11,6 +11,7 @@
   {% for car in cars %}
     <article class="cars">
         <header>
+          <a class="action" href="{{ url_for('cars.view') }}">
             <div>
                 <h1>{{ car['year'] }}</h1>
                 <div class="about">Make: {{ car['make'] }}</div>
@@ -20,6 +21,7 @@
                 <div class="about">Mileage: {{ car['mileage'] }}</div>
                 <div class="about">Price: {{ car['price'] }}</div>
             </div>
+          </a>
         </header>
     </article>
   {% endfor %}

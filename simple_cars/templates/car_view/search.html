@@ -10,7 +10,17 @@
   </div>
 <button id="hello">hello</button>
 <div class="dropdown">
-    <button class="dropbtn">Trim</button>
+  <button class="dropbtn">Model</button>
+  <div class="dropdown-content">
+      {% for model in models %}
+      <form action="{{ url_for('cars.search_results') }}" method="post">
+          <input type="submit" name="model" value="{{ model['model'] }}">
+      </form>  
+      {% endfor %}
+  </div>
+</div>
+<div class="dropdown">
+  <button class="dropbtn">Trim</button>
   <div class="dropdown-content">
       {% for trim in trims %}
       <form action="{{ url_for('cars.search_results') }}" method="post">
