@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}A List of Every Car{% endblock %}</h1>
+  <h1>{% block title %}This is the Index: A List of Every Car in the Database{% endblock %}</h1>
   <a class="action" href="{{ url_for('cars.search') }}">Search!</a>
 {% endblock %}
 
 {% block content %}
-
+<h2> Sort</h2>
 <!-- trying to implement a sorting method, based on hertz car sales. Might need some JS to get it working-->
 <form action="{{ url_for('cars.index') }}">
   <div class="sort-by">

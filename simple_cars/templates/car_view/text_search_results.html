@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<h1>{% block title %}Search Results!{% endblock %}</h1>
+  <a class="action" href="{{ url_for('cars.index') }}">Back to Index</a>
+  <a class="action" href="{{ url_for('cars.search') }}">Back to Search</a>
+  <h2>Your Search Parameters: {{ value }}</h2>
+{% endblock %}
+
+{% block content %}
+
+{% endblock %}

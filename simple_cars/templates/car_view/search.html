@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Search!{% endblock %}</h1>
+  <h1>{% block title %}Search for Your Car!{% endblock %}</h1>
   <a class="action" href="{{ url_for('cars.index') }}">Back to Index</a>
 {% endblock %}
 
@@ -39,6 +39,11 @@
       {% endfor %}
   </div>
 </div>
+
+<form action="{{ url_for('cars.text_search_results') }}" method="post">
+  <input type="text" name="car" value="search by make, model, trim, or drive">
+  <input type="submit" value="Submit">
+</form>
 
 
 {% endblock %}

@@ -5,11 +5,26 @@ from simple_cars.db import get_db
 
 bp = Blueprint('cars', __name__)
 
+def get_car_info():
+    db = get_db()
+
+    models = db.execute(
+        'SELECT DISTINCT model FROM cars'
+    ).fetchall()
+    trims = db.execute(
+        'SELECT DISTINCT trim FROM cars'
+    ).fetchall()
+    drives = db.execute(
+        'SELECT DISTINCT drive FROM cars'
+    ).fetchall()
+    return models, trims, drives
+
 @bp.route('/cars', methods=('GET','POST'))
 def index():
     page_number = int(request.args.get('page', '0'))
 
     db = get_db()
+    # the sortBy variable isn't coming through--I need to look to JS I think
     sortBy = request.args.get('sortBy', 'year')
     cars = db.execute(
         'SELECT year,make,model,trim,drive,mileage,price FROM cars ORDER BY ' + sortBy
@@ -25,17 +40,8 @@ def index():
 @bp.route('/cars/search', methods=('GET','POST'))
 def search():
     
-    db = get_db()
-    models = db.execute(
-        'SELECT DISTINCT model FROM cars'
-    ).fetchall()
-    trims = db.execute(
-        'SELECT DISTINCT trim FROM cars'
-    ).fetchall()
-    drives = db.execute(
-        'SELECT DISTINCT drive FROM cars'
-    ).fetchall()
-
+    models, trims, drives = get_car_info()
+    print("yay!")
     return render_template('car_view/search.html', trims=trims, drives=drives, models=models)
 
 @bp.route('/cars/search_results', methods=('GET','POST'))
@@ -56,6 +62,7 @@ def search_results():
         # valid = switch_statement(key)
         # if valid == True:
         value = request.form[key[0]]
+        print(key) 
         print(value)
         cars = db.execute(
             'SELECT * FROM cars WHERE ' + key[0] + ' = ? ORDER BY price', (value,)
@@ -84,6 +91,24 @@ def search_results():
     
     return render_template('car_view/search_results.html', cars=cars, page_number=page_number, key=key, value=value)
 
+@bp.route('/cars/text_search_results', methods=('GET','POST'))
+def text_search_results():
+
+    car = list(request.form)
+    value = request.form[car[0]]
+    print(car)
+    print(value)
+    # the following function checks if the search value is in the database, identifies it, then returns the correct query from the db.
+    def sorter(value):
+        models, trims, drives = get_car_info()
+
+
+
+    return render_template('car_view/text_search_results.html', value=value)
+
+
+
 @bp.route('/cars/individual_view')
 def view():
     return 'hello, car!'
+
