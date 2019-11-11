@@ -11,9 +11,11 @@
   {% for car in cars %}
     <article class="cars">
         <header>
-          <a class="action" href="{{ url_for('cars.view') }}">
+          <!-- looking for the rowid from the db, don't know if it's coming through-->
+          <a class="action" href="{{ url_for('cars.view') }}?car_id={{ car['id'] }}">
             <div>
                 <h1>{{ car['year'] }}</h1>
+                <div class="about">id: {{ car['ID'] }}</div>
                 <div class="about">Make: {{ car['make'] }}</div>
                 <div class="about">Model: {{ car['model'] }}</div>
                 <div class="about">Trim: {{ car['trim'] }}</div>
@@ -28,7 +30,7 @@
     <div class="pagination">
       <a href="{{ url_for('cars.search_results') }}?page=0&key={{ key }}&value={{ value }}">first</a>
       <a href="{{ url_for('cars.search_results') }}?page={{ page_number - 1 }}&key={{ key }}&value={{ value }}">prev</a>
-      {{ page_number }}
+      {{ page_number }} of {{ total_pages }}
       <a href="{{ url_for('cars.search_results') }}?page={{ page_number + 1 }}&key={{ key }}&value={{ value }}">next</a>
       <a href="{{ url_for('cars.search_results') }}?page=-1&key={{ key }}&value={{ value }}">last</a>
     </div>

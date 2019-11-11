@@ -38,7 +38,7 @@
   <div class="pagination">
     <a href="{{ url_for('cars.index') }}?page=0">first</a>
     <a href="{{ url_for('cars.index') }}?page={{ page_number - 1 }}">prev</a>
-    {{ page_number }}
+    {{ page_number }} of {{ total_pages }}
     <a href="{{ url_for('cars.index') }}?page={{ page_number + 1 }}">next</a>
     <a href="{{ url_for('cars.index') }}?page=-1">last</a>
   </div>

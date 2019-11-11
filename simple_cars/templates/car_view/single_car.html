@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Here's your car!{% endblock %}</h1>
+  <a class="action" href="{{ url_for('cars.index') }}">Back to Index</a>
+  <a class="action" href="{{ url_for('cars.search') }}">Back to Search</a>
+  <h2>{{ key }}: {{ value}}</h2>
+{% endblock %}
+
+{% block content %}
+<div>
+        <h1>{{ car['year'] }}</h1>
+        <div class="about">id: {{ car['ID'] }}</div>
+        <div class="about">Make: {{ car['make'] }}</div>
+        <div class="about">Model: {{ car['model'] }}</div>
+        <div class="about">Trim: {{ car['trim'] }}</div>
+        <div class="about">Drive: {{ car['drive'] }}</div>
+        <div class="about">Mileage: {{ car['mileage'] }}</div>
+        <div class="about">Price: {{ car['price'] }}</div>
+    </div>
+
+{% endblock %}

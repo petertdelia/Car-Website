@@ -25,17 +25,18 @@ def index():
 
     db = get_db()
     # the sortBy variable isn't coming through--I need to look to JS I think
-    sortBy = request.args.get('sortBy', 'year')
+    sortBy = request.args.get('sortBy', 'price')
     cars = db.execute(
         'SELECT year,make,model,trim,drive,mileage,price FROM cars ORDER BY ' + sortBy
     ).fetchall()
 
     if page_number == -1:
         page_number = len(cars) / 10
+    total_pages = len(cars) / 10
 
     cars = cars[10 * page_number : 10 * (page_number + 1)]
 
-    return render_template('car_view/index.html', cars=cars, page_number=page_number)
+    return render_template('car_view/index.html', cars=cars, page_number=page_number, total_pages=total_pages)
 
 @bp.route('/cars/search', methods=('GET','POST'))
 def search():
@@ -71,13 +72,14 @@ def search_results():
         #     print('no valid key found!')
             
         page_number = int(request.args.get('page', '0'))
+        total_pages = len(cars) / 10
         
-        cars = cars[10 * page_number : 10 * (page_number + 1)]
         if page_number == -1:
             page_number = len(cars) / 10
+    
         cars = cars[10 * page_number : 10 * (page_number + 1)]
 
-        return render_template('car_view/search_results.html', cars=cars, page_number=page_number, key=key[0], value=value)
+        return render_template('car_view/search_results.html', cars=cars, page_number=page_number, total_pages=total_pages, key=key[0], value=value)
     db = get_db()
     key =  request.args.get('key')
     value = request.args.get('value')
@@ -87,9 +89,10 @@ def search_results():
          ).fetchall()
     if page_number == -1:
         page_number = len(cars) / 10
+    total_pages = len(cars) / 10
     cars = cars[10 * page_number : 10 * (page_number + 1)]
     
-    return render_template('car_view/search_results.html', cars=cars, page_number=page_number, key=key, value=value)
+    return render_template('car_view/search_results.html', cars=cars, page_number=page_number, total_pages=total_pages, key=key, value=value)
 
 @bp.route('/cars/text_search_results', methods=('GET','POST'))
 def text_search_results():
@@ -110,5 +113,13 @@ def text_search_results():
 
 @bp.route('/cars/individual_view')
 def view():
-    return 'hello, car!'
+
+    # trying to get the car row id to come through to uniquely identify the car and then return its info from the db
+    car_id = request.args.get('car_id', 'error')
+    db = get_db()
+    car = db.execute(
+        'SELECT * FROM cars WHERE ID = ?', (car_id,)
+    ).fetchone()
+
+    return render_template('car_view/single_car.html', car=car)
 
