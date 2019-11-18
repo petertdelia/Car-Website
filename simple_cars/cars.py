@@ -19,13 +19,16 @@ def get_car_info():
     ).fetchall()
     return models, trims, drives
 
+
+
 @bp.route('/cars', methods=('GET','POST'))
 def index():
     page_number = int(request.args.get('page', '0'))
 
     db = get_db()
-    # the sortBy variable isn't coming through--I need to look to JS I think
     sortBy = request.args.get('sortBy', 'price')
+    if request.method == "POST":
+        sortBy = request.args.get('sortBy', 'price')
     cars = db.execute(
         'SELECT year,make,model,trim,drive,mileage,price FROM cars ORDER BY ' + sortBy
     ).fetchall()
@@ -36,20 +39,20 @@ def index():
 
     cars = cars[10 * page_number : 10 * (page_number + 1)]
 
-    return render_template('car_view/index.html', cars=cars, page_number=page_number, total_pages=total_pages)
+    return render_template('car_view/index.html', cars=cars, page_number=page_number, total_pages=total_pages, sortBy=sortBy)
 
 @bp.route('/cars/search', methods=('GET','POST'))
 def search():
     
     models, trims, drives = get_car_info()
-    print("yay!")
     return render_template('car_view/search.html', trims=trims, drives=drives, models=models)
 
 @bp.route('/cars/search_results', methods=('GET','POST'))
 def search_results():
     if request.method =='POST':
         db = get_db()
-        key =  list(request.form)
+        temp_key =  list(request.form)
+        key = temp_key[0]
         # meant to implement a function that checks that the key is valid
         # def switch_statement(key):
         #     switcher = {
@@ -62,11 +65,11 @@ def search_results():
         #         return False
         # valid = switch_statement(key)
         # if valid == True:
-        value = request.form[key[0]]
+        value = request.form[key]
         print(key) 
         print(value)
         cars = db.execute(
-            'SELECT * FROM cars WHERE ' + key[0] + ' = ? ORDER BY price', (value,)
+            'SELECT * FROM cars WHERE ' + key + ' = ? ORDER BY price', (value,)
         ).fetchall()
         # else:
         #     print('no valid key found!')
@@ -79,7 +82,7 @@ def search_results():
     
         cars = cars[10 * page_number : 10 * (page_number + 1)]
 
-        return render_template('car_view/search_results.html', cars=cars, page_number=page_number, total_pages=total_pages, key=key[0], value=value)
+        return render_template('car_view/search_results.html', cars=cars, page_number=page_number, total_pages=total_pages, key=key, value=value)
     db = get_db()
     key =  request.args.get('key')
     value = request.args.get('value')

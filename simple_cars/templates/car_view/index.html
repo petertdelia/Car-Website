@@ -8,16 +8,16 @@
 {% block content %}
 <h2> Sort</h2>
 <!-- trying to implement a sorting method, based on hertz car sales. Might need some JS to get it working-->
-<form action="{{ url_for('cars.index') }}">
+<form id="sort-form" action="{{ url_for('cars.index') }}" method="POST">
   <div class="sort-by">
-    <select class="form-control select">
+    <select class="form-control select" id="sort-select" onchange="changeAction()">
       <option value="?">Reset Sort</option>
       <option value="?sortBy=year">Year</option>
       <option value="?sortBy=price">Price</option>
       <option value="?sortBy=mileage">Mileage</option>
     </select>
   </div>
-  <input type="submit" value="Submit">
+  <button class="btn-new" onclick="submitForm();">Sort</button>
 </form>  
   {% for car in cars %}
     <article class="cars">
@@ -36,10 +36,10 @@
   {% endfor %}
 
   <div class="pagination">
-    <a href="{{ url_for('cars.index') }}?page=0">first</a>
-    <a href="{{ url_for('cars.index') }}?page={{ page_number - 1 }}">prev</a>
+    <a href="{{ url_for('cars.index') }}?page=0&sortBy={{ sortBy }}">first</a>
+    <a href="{{ url_for('cars.index') }}?page={{ page_number - 1 }}&sortBy={{ sortBy }}">prev</a>
     {{ page_number }} of {{ total_pages }}
-    <a href="{{ url_for('cars.index') }}?page={{ page_number + 1 }}">next</a>
-    <a href="{{ url_for('cars.index') }}?page=-1">last</a>
+    <a href="{{ url_for('cars.index') }}?page={{ page_number + 1 }}&sortBy={{ sortBy }}">next</a>
+    <a href="{{ url_for('cars.index') }}?page=-1&sortBy={{ sortBy }}">last</a>
   </div>
 {% endblock %}
