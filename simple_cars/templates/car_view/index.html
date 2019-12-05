@@ -7,34 +7,27 @@
 
 {% block content %}
 <h2> Sort</h2>
-<!-- trying to implement a sorting method, based on hertz car sales. Might need some JS to get it working-->
 <form id="sort-form" action="{{ url_for('cars.index') }}" method="POST">
   <div class="sort-by">
     <select class="form-control select" id="sort-select" onchange="changeAction()">
       <option value="?">Reset Sort</option>
-      <option value="?sortBy=year">Year</option>
-      <option value="?sortBy=price">Price</option>
-      <option value="?sortBy=mileage">Mileage</option>
+      {% for name in column_names %}
+      <option value="?sortBy={{ name }}">{{ name }}</option>
+      {% endfor %}
     </select>
   </div>
-  <button class="btn-new" onclick="submitForm();">Sort</button>
 </form>  
   {% for car in cars %}
     <article class="cars">
         <header>
             <div>
-                <h1>{{ car['year'] }}</h1>
-                <div class="about">Make: {{ car['make'] }}</div>
-                <div class="about">Model: {{ car['model'] }}</div>
-                <div class="about">Trim: {{ car['trim'] }}</div>
-                <div class="about">Drive: {{ car['drive'] }}</div>
-                <div class="about">Mileage: {{ car['mileage'] }}</div>
-                <div class="about">Price: {{ car['price'] }}</div>
+                {% for name in column_names %}
+                <div class="about">{{ name }}: {{ car[name] }}</div>
+                {% endfor %}
             </div>
         </header>
     </article>
   {% endfor %}
-
   <div class="pagination">
     <a href="{{ url_for('cars.index') }}?page=0&sortBy={{ sortBy }}">first</a>
     <a href="{{ url_for('cars.index') }}?page={{ page_number - 1 }}&sortBy={{ sortBy }}">prev</a>

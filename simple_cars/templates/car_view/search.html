@@ -6,39 +6,36 @@
 {% endblock %}
 
 {% block content %}
-<div id="box">
-  </div>
-<button id="hello">hello</button>
-<div class="dropdown">
-  <button class="dropbtn">Model</button>
-  <div class="dropdown-content">
+<form id="sort-form" action="{{ url_for('cars.search_results') }}" method="POST">
+  <div class="sort-by">
+    <select class="form-control select" id="sort-select" onchange="changeAction('sort-select','sort-form')">
+      <option value="?">Model</option>
       {% for model in models %}
-      <form action="{{ url_for('cars.search_results') }}" method="post">
-          <input type="submit" name="model" value="{{ model['model'] }}">
-      </form>  
+      <option value="?model={{ model['model'] }}">{{ model['model'] }}</option>
       {% endfor %}
+    </select>
   </div>
-</div>
-<div class="dropdown">
-  <button class="dropbtn">Trim</button>
-  <div class="dropdown-content">
+</form>  
+<form id="sort-form1" action="{{ url_for('cars.search_results') }}" method="POST">
+  <div class="sort-by">
+    <select class="form-control select" id="sort-select1" onchange="changeAction('sort-select1','sort-form1')">
+      <option value="?">Trim</option>
       {% for trim in trims %}
-      <form action="{{ url_for('cars.search_results') }}" method="post">
-          <input type="submit" name="trim" value="{{ trim['trim'] }}">
-      </form>  
+      <option value="?trim={{ trim['trim'] }}">{{ trim['trim'] }}</option>
       {% endfor %}
+    </select>
   </div>
-</div>
-<div class="dropdown">
-    <button class="dropbtn">Drive</button>
-  <div class="dropdown-content">
+</form>
+<form id="sort-form2" action="{{ url_for('cars.search_results') }}" method="POST">
+  <div class="sort-by">
+    <select class="form-control select" id="sort-select2" onchange="changeAction('sort-select2','sort-form2')">
+      <option value="?">Drive</option>
       {% for drive in drives %}
-      <form action="{{ url_for('cars.search_results') }}" method="post">
-          <input type="submit" name="drive" value="{{ drive['drive'] }}">
-      </form>  
+      <option value="?drive={{ drive['drive'] }}">{{ drive['drive'] }}</option>
       {% endfor %}
+    </select>
   </div>
-</div>
+</form>
 
 <form action="{{ url_for('cars.text_search_results') }}" method="post">
   <input type="text" name="car" value="search by make, model, trim, or drive">

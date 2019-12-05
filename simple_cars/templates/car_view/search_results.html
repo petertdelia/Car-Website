@@ -8,10 +8,23 @@
 {% endblock %}
 
 {% block content %}
-  {% for car in cars %}
+  <form id="sort-form" action="{{ url_for('cars.search_results') }}" method="POST">
+  <div class="sort-by">
+    <select class="form-control select" id="sort-select" onchange="changeAction('sort-select','sort-form')">
+      <!-- need to implement for loop here -->
+      <option value="?">Reset Sort</option>
+      <option value="?sortBy=model&key={{ key }}&value={{ value }}">Model</option>
+      <option value="?sortBy=year&key={{ key }}&value={{ value }}">Year</option>
+      <option value="?sortBy=trim&key={{ key }}&value={{ value }}">Trim</option>
+      <option value="?sortBy=drive&key={{ key }}&value={{ value }}">Drive</option>
+      <option value="?sortBy=price&key={{ key }}&value={{ value }}">Price</option>
+      <option value="?sortBy=mileage&key={{ key }}&value={{ value }}">Mileage</option>
+    </select>
+  </div>
+</form>  
+{% for car in cars %}
     <article class="cars">
         <header>
-          <!-- looking for the rowid from the db, don't know if it's coming through-->
           <a class="action" href="{{ url_for('cars.view') }}?car_id={{ car['id'] }}">
             <div>
                 <h1>{{ car['year'] }}</h1>
@@ -28,10 +41,10 @@
     </article>
   {% endfor %}
     <div class="pagination">
-      <a href="{{ url_for('cars.search_results') }}?page=0&key={{ key }}&value={{ value }}">first</a>
-      <a href="{{ url_for('cars.search_results') }}?page={{ page_number - 1 }}&key={{ key }}&value={{ value }}">prev</a>
+      <a href="{{ url_for('cars.search_results') }}?page=0&key={{ key }}&value={{ value }}&sortBy={{ sortBy }}">first</a>
+      <a href="{{ url_for('cars.search_results') }}?page={{ page_number - 1 }}&key={{ key }}&value={{ value }}&sortBy={{ sortBy }}">prev</a>
       {{ page_number }} of {{ total_pages }}
-      <a href="{{ url_for('cars.search_results') }}?page={{ page_number + 1 }}&key={{ key }}&value={{ value }}">next</a>
-      <a href="{{ url_for('cars.search_results') }}?page=-1&key={{ key }}&value={{ value }}">last</a>
+      <a href="{{ url_for('cars.search_results') }}?page={{ page_number + 1 }}&key={{ key }}&value={{ value }}&sortBy={{ sortBy }}">next</a>
+      <a href="{{ url_for('cars.search_results') }}?page=-1&key={{ key }}&value={{ value }}&sortBy={{ sortBy }}">last</a>
     </div>
 {% endblock %}

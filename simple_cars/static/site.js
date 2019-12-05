@@ -10,16 +10,16 @@ box.addEventListener("click",function(e){
 },true);
 
 
-function changeAction() {
+function changeAction(sortselect,sortform) {
 
-	var sort_select = document.getElementById('sort-select');
+	var sort_select = document.getElementById(sortselect);
 	var selected_opt = sort_select.options[sort_select.selectedIndex].value;
 
-	var sort_form = document.getElementById('sort-form').action;
+	var sort_form = document.getElementById(sortform).action;
 	var form_action = sort_form + selected_opt;
 
-	document.getElementById('sort-form').action = form_action
-	form = document.getElementById('sort-form')
+	document.getElementById(sortform).action = form_action
+	form = document.getElementById(sortform)
 	form.submit()
 }
 
