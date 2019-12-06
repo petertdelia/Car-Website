@@ -7,12 +7,12 @@
 
 {% block content %}
 <h2> Sort</h2>
-<form id="sort-form" action="{{ url_for('cars.index') }}" method="POST">
+<form id="sort-form" action="{{ url_for('cars.index') }}" method="GET">
   <div class="sort-by">
-    <select class="form-control select" id="sort-select" onchange="changeAction()">
+    <select class="form-control select" id="sort-select" name="sortBy" onchange="this.form.submit()">
       <option value="?">Reset Sort</option>
       {% for name in column_names %}
-      <option value="?sortBy={{ name }}">{{ name }}</option>
+      <option value="{{ name }}" {% if name == sortBy %} selected {% endif %}>{{ name }}</option>
       {% endfor %}
     </select>
   </div>

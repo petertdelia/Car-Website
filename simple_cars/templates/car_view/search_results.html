@@ -9,36 +9,28 @@
 
 {% block content %}
   <form id="sort-form" action="{{ url_for('cars.search_results') }}" method="POST">
-  <div class="sort-by">
+  <div class="sort-by" id="sort-value" value="{{ sortBy }}">
     <select class="form-control select" id="sort-select" onchange="changeAction('sort-select','sort-form')">
       <!-- need to implement for loop here -->
-      <option value="?">Reset Sort</option>
-      <option value="?sortBy=model&key={{ key }}&value={{ value }}">Model</option>
-      <option value="?sortBy=year&key={{ key }}&value={{ value }}">Year</option>
-      <option value="?sortBy=trim&key={{ key }}&value={{ value }}">Trim</option>
-      <option value="?sortBy=drive&key={{ key }}&value={{ value }}">Drive</option>
-      <option value="?sortBy=price&key={{ key }}&value={{ value }}">Price</option>
-      <option value="?sortBy=mileage&key={{ key }}&value={{ value }}">Mileage</option>
+      <option value="?key={{ key }}&value={{ value }}&page={{ page_number }}">Reset Sort</option>
+      {% for name in column_names %}
+      <option value="?sortBy={{ name }}&key={{ key }}&value={{ value }}&page={{ page_number }}">{{ name }}</option>
+      {% endfor %}
     </select>
   </div>
 </form>  
 {% for car in cars %}
-    <article class="cars">
-        <header>
-          <a class="action" href="{{ url_for('cars.view') }}?car_id={{ car['id'] }}">
-            <div>
-                <h1>{{ car['year'] }}</h1>
-                <div class="about">id: {{ car['ID'] }}</div>
-                <div class="about">Make: {{ car['make'] }}</div>
-                <div class="about">Model: {{ car['model'] }}</div>
-                <div class="about">Trim: {{ car['trim'] }}</div>
-                <div class="about">Drive: {{ car['drive'] }}</div>
-                <div class="about">Mileage: {{ car['mileage'] }}</div>
-                <div class="about">Price: {{ car['price'] }}</div>
-            </div>
-          </a>
-        </header>
-    </article>
+  <article class="cars">
+    <header>
+      <a class="action" href="{{ url_for('cars.view') }}?car_id={{ car['id'] }}&page={{ page_number }}&key={{ key }}&value={{ value }}&sortBy={{ sortBy }}">  
+        <div>
+            {% for name in column_names %}
+            <div class="about">{{ name }}: {{ car[name] }}</div>
+            {% endfor %}
+        </div>
+      </a>
+    </header>
+  </article>
   {% endfor %}
     <div class="pagination">
       <a href="{{ url_for('cars.search_results') }}?page=0&key={{ key }}&value={{ value }}&sortBy={{ sortBy }}">first</a>

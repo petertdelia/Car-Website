@@ -12,13 +12,13 @@ box.addEventListener("click",function(e){
 
 function changeAction(sortselect,sortform) {
 
-	var sort_select = document.getElementById(sortselect);
-	var selected_opt = sort_select.options[sort_select.selectedIndex].value;
+	// var sort_select = document.getElementById(sortselect);
+	// var selected_opt = sort_select.options[sort_select.selectedIndex].value;
 
-	var sort_form = document.getElementById(sortform).action;
-	var form_action = sort_form + selected_opt;
+	// var sort_form = document.getElementById(sortform).action;
+	// var form_action = sort_form + selected_opt;
 
-	document.getElementById(sortform).action = form_action
+	// document.getElementById(sortform).action = form_action
 	form = document.getElementById(sortform)
 	form.submit()
 }

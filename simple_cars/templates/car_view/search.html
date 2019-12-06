@@ -6,32 +6,38 @@
 {% endblock %}
 
 {% block content %}
-<form id="sort-form" action="{{ url_for('cars.search_results') }}" method="POST">
+<form id="sort-form" action="{{ url_for('cars.search') }}" method="GET">
   <div class="sort-by">
-    <select class="form-control select" id="sort-select" onchange="changeAction('sort-select','sort-form')">
-      <option value="?">Model</option>
-      {% for model in models %}
-      <option value="?model={{ model['model'] }}">{{ model['model'] }}</option>
+    <select class="form-control select" id="sort-select" name="sortBy" onchange="this.form.submit()">
+      <option value="?">Reset Sort</option>
+      {% for name in column_names %}
+      <option value="{{ name }}" {% if name == sortBy %} selected {% endif %}>{{ name }}</option>
       {% endfor %}
     </select>
   </div>
 </form>  
-<form id="sort-form1" action="{{ url_for('cars.search_results') }}" method="POST">
-  <div class="sort-by">
-    <select class="form-control select" id="sort-select1" onchange="changeAction('sort-select1','sort-form1')">
-      <option value="?">Trim</option>
-      {% for trim in trims %}
-      <option value="?trim={{ trim['trim'] }}">{{ trim['trim'] }}</option>
+<form id="filter-form" action="{{ url_for('cars.search') }}" method="GET">
+  <div class="filter-by">
+    <select class="form-control select" name="model" onchange="this.form.submit()">
+      <option value="">All Models</option>
+      {% for a in models %}
+      <option value="{{ a['model'] }}" {% if a['model'] == model %} selected {% endif %} >{{ a['model'] }}</option>
       {% endfor %}
     </select>
   </div>
-</form>
-<form id="sort-form2" action="{{ url_for('cars.search_results') }}" method="POST">
-  <div class="sort-by">
-    <select class="form-control select" id="sort-select2" onchange="changeAction('sort-select2','sort-form2')">
-      <option value="?">Drive</option>
-      {% for drive in drives %}
-      <option value="?drive={{ drive['drive'] }}">{{ drive['drive'] }}</option>
+  <div class="filter-by">
+    <select class="form-control select" name="trim" onchange="this.form.submit()">
+      <option value="">All Trims</option>
+      {% for a in trims %}
+      <option value="{{ a['trim'] }}" {% if a['trim'] == trim %} selected {% endif %}>{{ a['trim'] }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="filter-by">
+    <select class="form-control select" name="drive" onchange="this.form.submit()">
+      <option value="">All Drives</option>
+      {% for a in drives %}
+      <option value="{{ a['drive'] }}" {% if a['drive'] == drive %} selected {% endif %}>{{ a['drive'] }}</option>
       {% endfor %}
     </select>
   </div>
@@ -41,6 +47,24 @@
   <input type="text" name="car" value="search by make, model, trim, or drive">
   <input type="submit" value="Submit">
 </form>
-
-
+{% for car in cars %}
+  <article class="cars">
+    <header>
+      <a class="action" href="{{ url_for('cars.view') }}?car_id={{ car['id'] }}&page={{ page_number }}&key={{ key }}&value={{ value }}&sortBy={{ sortBy }}">  
+        <div>
+            {% for name in column_names %}
+            <div class="about">{{ name }}: {{ car[name] }}</div>
+            {% endfor %}
+        </div>
+      </a>
+    </header>
+  </article>
+  {% endfor %}
+  <div class="pagination">
+    <a href="{{ url_for('cars.search') }}?page=0&sortBy={{ sortBy }}">first</a>
+    <a href="{{ url_for('cars.search') }}?page={{ page_number - 1 }}&sortBy={{ sortBy }}&model={{ model }}&trim={{ trim }}&drive={{ drive }}">prev</a>
+    {{ page_number }} of {{ total_pages }}
+    <a href="{{ url_for('cars.search') }}?page={{ page_number + 1 }}&sortBy={{ sortBy }}&model={{ model }}&trim={{ trim }}&drive={{ drive }}">next</a>
+    <a href="{{ url_for('cars.search') }}?page=-1&sortBy={{ sortBy }}">last</a>
+  </div>
 {% endblock %}
