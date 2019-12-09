@@ -5,7 +5,7 @@ from simple_cars.db import get_db
 
 bp = Blueprint('cars', __name__)
 
-def get_car_info(model,trim,drive):
+def get_car_info(model,trim,drive,sortBy):
     db = get_db()
 
     if not model and not trim and not drive:
@@ -18,7 +18,10 @@ def get_car_info(model,trim,drive):
         drives = db.execute(
             'SELECT DISTINCT drive FROM cars'
         ).fetchall()
-        return models, trims, drives
+        cars = db.execute(
+            'SELECT * FROM cars ORDER BY ' + sortBy
+        ).fetchall()
+        return models, trims, drives, cars
     elif not trim and not drive:
         models = db.execute(
             'SELECT DISTINCT model FROM cars'
@@ -29,7 +32,11 @@ def get_car_info(model,trim,drive):
         drives = db.execute(
             'SELECT DISTINCT drive FROM cars WHERE model=?', (model,)
         ).fetchall()
-        return models, trims, drives
+        cars = db.execute(
+            'SELECT * FROM cars WHERE model=? ORDER BY ' + sortBy, 
+            (model,)
+        ).fetchall()
+        return models, trims, drives, cars
     elif not model and not drive:
         models = db.execute(
             'SELECT DISTINCT model FROM cars WHERE trim=?', (trim,)
@@ -40,7 +47,11 @@ def get_car_info(model,trim,drive):
         drives = db.execute(
             'SELECT DISTINCT drive FROM cars WHERE trim=?', (trim,)
         ).fetchall()
-        return models, trims, drives  
+        cars = db.execute(
+            'SELECT * FROM cars WHERE trim=? ORDER BY ' + sortBy, 
+            (trim,)
+        ).fetchall()
+        return models, trims, drives, cars
     elif not model and not trim:
         models = db.execute(
             'SELECT DISTINCT model FROM cars WHERE drive=?', (drive,)
@@ -51,7 +62,11 @@ def get_car_info(model,trim,drive):
         drives = db.execute(
             'SELECT DISTINCT drive FROM cars'
         ).fetchall()
-        return models, trims, drives         
+        cars = db.execute(
+            'SELECT * FROM cars WHERE drive=? ORDER BY ' + sortBy, 
+            (drive,)
+        ).fetchall()
+        return models, trims, drives, cars         
     elif not model:
         models = db.execute(
             'SELECT DISTINCT model FROM cars WHERE drive=? AND trim=?', (drive, trim)
@@ -62,7 +77,11 @@ def get_car_info(model,trim,drive):
         drives = db.execute(
             'SELECT DISTINCT drive FROM cars WHERE trim=?', (trim,)
         ).fetchall()
-        return models, trims, drives  
+        cars = db.execute(
+            'SELECT * FROM cars WHERE drive=? AND trim=? ORDER BY ' + sortBy, 
+            (drive, trim)
+        ).fetchall()
+        return models, trims, drives, cars
     elif not trim:
         models = db.execute(
             'SELECT DISTINCT model FROM cars WHERE drive=?', (drive,)
@@ -73,7 +92,11 @@ def get_car_info(model,trim,drive):
         drives = db.execute(
             'SELECT DISTINCT drive FROM cars'
         ).fetchall()
-        return models, trims, drives 
+        cars = db.execute(
+            'SELECT * FROM cars WHERE drive=? AND model=? ORDER BY ' + sortBy, 
+            (drive, model)
+        ).fetchall()
+        return models, trims, drives, cars 
     elif not drive:
         models = db.execute(
             'SELECT DISTINCT model FROM cars WHERE trim=?', (trim,)
@@ -83,8 +106,12 @@ def get_car_info(model,trim,drive):
         ).fetchall()
         drives = db.execute(
             'SELECT DISTINCT drive FROM cars WHERE model=? AND trim=?', (model, trim)
-        ).fetchall()            
-        return models, trims, drives             
+        ).fetchall()        
+        cars = db.execute(
+            'SELECT * FROM cars WHERE model=? AND trim=? ORDER BY ' + sortBy, 
+            (model, trim)
+        ).fetchall()    
+        return models, trims, drives, cars             
     else:
         models = db.execute(
             'SELECT DISTINCT model FROM cars WHERE drive= ? AND trim=?', (drive, trim)
@@ -94,13 +121,17 @@ def get_car_info(model,trim,drive):
         ).fetchall()
         drives = db.execute(
             'SELECT DISTINCT drive FROM cars WHERE trim=? AND model=?', (trim, model)
+        ).fetchall()
+        cars = db.execute(
+            'SELECT * FROM cars WHERE model=? AND trim=? AND drive=? ORDER BY ' + sortBy, 
+            (model, trim, drive)
         ).fetchall()            
-        return models, trims, drives             
+        return models, trims, drives, cars             
 
 # is there a js way to generalize the sort list on the html? this function seems inefficient: 
-def get_column_names():
+def get_column_names(table_name):
     db = get_db()
-    names = db.execute('pragma table_info(cars)').fetchall()
+    names = db.execute('pragma table_info(' + table_name + ')').fetchall()
     column_names = []
     i = 0
     for name in names:
@@ -116,7 +147,7 @@ def go_to():
 def index():
     db = get_db()
     page_number = int(request.args.get('page', '0'))
-    column_names = get_column_names()
+    column_names = get_column_names('cars')
     sortBy = request.args.get('sortBy', 'price')
 
     cars = db.execute(
@@ -135,22 +166,18 @@ def index():
 @bp.route('/cars/search', methods=('GET','POST'))
 def search():
     
-    column_names = get_column_names()
+    column_names = get_column_names('cars')
     model = request.args.get('model', '')
     trim = request.args.get('trim', '') 
     drive = request.args.get('drive', '')
     sortBy = request.args.get('sortBy', 'price')
     page_number = int(request.args.get('page', '0'))
-    models, trims, drives = get_car_info(model,trim,drive)
 
-    db = get_db()
-    cars = db.execute(
-            'SELECT * FROM cars WHERE model = ? AND trim = ? and drive = ? ORDER BY ' + sortBy, 
-            (model,trim,drive)
-        ).fetchall()
+    models, trims, drives, cars = get_car_info(model,trim,drive,sortBy)
+    total_pages = len(cars) // 10
+
     cars = cars[10 * page_number : 10 * (page_number + 1)]
     page_number = int(request.args.get('page', '0'))
-    total_pages = len(cars) // 10
 
     return render_template('car_view/search.html', trims=trims, drives=drives, models=models, 
         model=model, trim=trim, drive=drive, cars=cars, page_number=page_number, sortBy=sortBy,
@@ -158,7 +185,7 @@ def search():
 
 @bp.route('/cars/search_results', methods=('GET','POST'))
 def search_results():
-    column_names = get_column_names()
+    column_names = get_column_names('cars')
     if request.method =='POST':
         db = get_db()
         print(len(list(request.args)))
@@ -242,14 +269,17 @@ def view():
     car_id = request.args.get('car_id', 'error')
     sortBy = request.args.get('sortBy', 'price')
     page_number = request.args.get('page', '0')
-    key = request.args.get('key', 'ford')
-    value = request.args.get('value', 'edge')
+    model = request.args.get('model', '')
+    trim = request.args.get('trim', '') 
+    drive = request.args.get('drive', '')
 
     db = get_db()
-    column_names = get_column_names()
+    column_names = get_column_names('cars')
     car = db.execute(
         'SELECT * FROM cars WHERE ID = ?', (car_id,)
     ).fetchone()
 
-    return render_template('car_view/single_car.html', key=key, value=value, car=car, column_names=column_names, sortBy = sortBy, page_number = page_number)
+    return render_template('car_view/single_car.html', 
+        model=model, trim=trim, drive=drive, car=car, 
+        column_names=column_names, sortBy = sortBy, page_number = page_number)
 

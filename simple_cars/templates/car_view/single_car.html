@@ -3,9 +3,8 @@
 {% block header %}
   <h1>{% block title %}Here's your car!{% endblock %}</h1>
   <a class="action" href="{{ url_for('cars.index') }}">Back to Index</a>
-  <a class="action" href="{{ url_for('cars.search') }}">Back to Search</a>
-  <a class="action" href="{{ url_for('cars.search_results') }}?page={{ page_number }}&key={{ key }}&value={{ value }}&sortBy={{ sortBy }}" method="post">Back to Your Search Results</a>
-  <h2>Here's your car!</h2>
+  <a class="action" href="{{ url_for('cars.search') }}?page={{ page_number }}&trim={{ trim }}&model={{ model }}&drive={{ drive }}&sortBy={{ sortBy }}" method="get">Back to Your Search Results</a>
+  <h2>A Single Car</h2>
 {% endblock %}
 
 {% block content %}

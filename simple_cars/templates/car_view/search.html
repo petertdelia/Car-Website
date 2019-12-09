@@ -9,14 +9,12 @@
 <form id="sort-form" action="{{ url_for('cars.search') }}" method="GET">
   <div class="sort-by">
     <select class="form-control select" id="sort-select" name="sortBy" onchange="this.form.submit()">
-      <option value="?">Reset Sort</option>
+      <option value="price">Reset Sort</option>
       {% for name in column_names %}
       <option value="{{ name }}" {% if name == sortBy %} selected {% endif %}>{{ name }}</option>
       {% endfor %}
     </select>
   </div>
-</form>  
-<form id="filter-form" action="{{ url_for('cars.search') }}" method="GET">
   <div class="filter-by">
     <select class="form-control select" name="model" onchange="this.form.submit()">
       <option value="">All Models</option>
@@ -47,14 +45,26 @@
   <input type="text" name="car" value="search by make, model, trim, or drive">
   <input type="submit" value="Submit">
 </form>
-{% for car in cars %}
+ <div class="pagination">
+    <a href="{{ url_for('cars.search') }}?page=0&sortBy={{ sortBy }}">first</a>
+    <a href="{{ url_for('cars.search') }}?page={{ page_number - 1 }}&sortBy={{ sortBy }}&model={{ model }}&trim={{ trim }}&drive={{ drive }}">prev</a>
+    {{ page_number }} of {{ total_pages }}
+    <a href="{{ url_for('cars.search') }}?page={{ page_number + 1 }}&sortBy={{ sortBy }}&model={{ model }}&trim={{ trim }}&drive={{ drive }}">next</a>
+    <a href="{{ url_for('cars.search') }}?page=-1&sortBy={{ sortBy }}">last</a>
+  </div>
+  {% for car in cars %}
   <article class="cars">
     <header>
-      <a class="action" href="{{ url_for('cars.view') }}?car_id={{ car['id'] }}&page={{ page_number }}&key={{ key }}&value={{ value }}&sortBy={{ sortBy }}">  
+      <a class="action" href="{{ url_for('cars.view') }}?car_id={{ car['id'] }}&page={{ page_number }}&trim={{ trim }}&model={{ model }}&drive={{ drive }}&sortBy={{ sortBy }}">  
         <div>
-            {% for name in column_names %}
-            <div class="about">{{ name }}: {{ car[name] }}</div>
-            {% endfor %}
+          {% for name in column_names %}
+          {% if name == sortBy %}
+          <h2> {{ name }}: {{ car[name] }} </h2>
+          {% endif %}
+          {% endfor %}
+          {% for name in column_names %}
+          <div class="about">{{ name }}: {{ car[name] }}</div>
+          {% endfor %}
         </div>
       </a>
     </header>

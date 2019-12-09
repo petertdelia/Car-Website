@@ -10,7 +10,6 @@ def get_db():
                 detect_types=sqlite3.PARSE_DECLTYPES
             )
         g.db.row_factory = sqlite3.Row
-
     return g.db
 
 def get_relevant_car_info(**kwargs):
