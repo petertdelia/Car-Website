@@ -175,9 +175,9 @@ def search():
 
     models, trims, drives, cars = get_car_info(model,trim,drive,sortBy)
     total_pages = len(cars) // 10
-
+    if page_number == -1:
+            page_number = len(cars) // 10
     cars = cars[10 * page_number : 10 * (page_number + 1)]
-    page_number = int(request.args.get('page', '0'))
 
     return render_template('car_view/search.html', trims=trims, drives=drives, models=models, 
         model=model, trim=trim, drive=drive, cars=cars, page_number=page_number, sortBy=sortBy,

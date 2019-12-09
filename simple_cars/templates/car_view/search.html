@@ -46,11 +46,11 @@
   <input type="submit" value="Submit">
 </form>
  <div class="pagination">
-    <a href="{{ url_for('cars.search') }}?page=0&sortBy={{ sortBy }}">first</a>
+    <a href="{{ url_for('cars.search') }}?page=0&sortBy={{ sortBy }}&model={{ model }}&trim={{ trim }}&drive={{ drive }}">first</a>
     <a href="{{ url_for('cars.search') }}?page={{ page_number - 1 }}&sortBy={{ sortBy }}&model={{ model }}&trim={{ trim }}&drive={{ drive }}">prev</a>
     {{ page_number }} of {{ total_pages }}
     <a href="{{ url_for('cars.search') }}?page={{ page_number + 1 }}&sortBy={{ sortBy }}&model={{ model }}&trim={{ trim }}&drive={{ drive }}">next</a>
-    <a href="{{ url_for('cars.search') }}?page=-1&sortBy={{ sortBy }}">last</a>
+    <a href="{{ url_for('cars.search') }}?page=-1&sortBy={{ sortBy }}&model={{ model }}&trim={{ trim }}&drive={{ drive }}">last</a>
   </div>
   {% for car in cars %}
   <article class="cars">
@@ -71,10 +71,10 @@
   </article>
   {% endfor %}
   <div class="pagination">
-    <a href="{{ url_for('cars.search') }}?page=0&sortBy={{ sortBy }}">first</a>
+    <a href="{{ url_for('cars.search') }}?page=0&sortBy={{ sortBy }}&model={{ model }}&trim={{ trim }}&drive={{ drive }}">first</a>
     <a href="{{ url_for('cars.search') }}?page={{ page_number - 1 }}&sortBy={{ sortBy }}&model={{ model }}&trim={{ trim }}&drive={{ drive }}">prev</a>
     {{ page_number }} of {{ total_pages }}
     <a href="{{ url_for('cars.search') }}?page={{ page_number + 1 }}&sortBy={{ sortBy }}&model={{ model }}&trim={{ trim }}&drive={{ drive }}">next</a>
-    <a href="{{ url_for('cars.search') }}?page=-1&sortBy={{ sortBy }}">last</a>
+    <a href="{{ url_for('cars.search') }}?page=-1&sortBy={{ sortBy }}&model={{ model }}&trim={{ trim }}&drive={{ drive }}">last</a>
   </div>
 {% endblock %}
