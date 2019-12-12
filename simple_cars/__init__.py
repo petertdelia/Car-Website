@@ -8,7 +8,7 @@ def create_app(test_config=None):
     app = Flask(__name__)
     app.config.from_mapping(
         SECRET_KEY='DEV',
-        DATABASE=os.path.join(app.instance_path, 'cars.sqlite')
+        DATABASE=os.path.join(app.instance_path, 'cars_w_pics.sqlite')
     )
 
     try:

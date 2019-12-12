@@ -13,7 +13,7 @@
   <header>
       <div>
           {% for name in column_names %}
-          <div class="about">{{ name }}: {{ car[name] }}</div>
+          <div class="about">{% if name == 'Picture' %} <img src="data:image/jpeg;base64,{{ car[name] }}"/> {% else %} {{ name }}: {{ car[name] }} {% endif %}</div>
           {% endfor %}
       </div>
   </header>

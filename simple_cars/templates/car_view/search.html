@@ -16,16 +16,16 @@
     </select>
   </div>
   <div class="filter-by">
-    <select class="form-control select" name="model" onchange="this.form.submit()">
-      <option value="">All Models</option>
-      {% for a in models %}
-      <option value="{{ a['model'] }}" {% if a['model'] == model %} selected {% endif %} >{{ a['model'] }}</option>
+    <select class="form-control select" name="year" onchange="this.form.submit()">
+      <option value="">All Years {{ year }}</option>
+      {% for a in years %}
+      <option value="{{ a['year'] }}" {% if a['year'] == year %} selected {% endif %} >{{ a['year'] }}</option>
       {% endfor %}
     </select>
   </div>
   <div class="filter-by">
     <select class="form-control select" name="trim" onchange="this.form.submit()">
-      <option value="">All Trims</option>
+      <option value="">All Trims {{trim}}</option>
       {% for a in trims %}
       <option value="{{ a['trim'] }}" {% if a['trim'] == trim %} selected {% endif %}>{{ a['trim'] }}</option>
       {% endfor %}
@@ -42,28 +42,28 @@
 </form>
 
 <form action="{{ url_for('cars.text_search_results') }}" method="post">
-  <input type="text" name="car" value="search by make, model, trim, or drive">
+  <input type="text" name="car" value="search by make, year, trim, or drive">
   <input type="submit" value="Submit">
 </form>
  <div class="pagination">
-    <a href="{{ url_for('cars.search') }}?page=0&sortBy={{ sortBy }}&model={{ model }}&trim={{ trim }}&drive={{ drive }}">first</a>
-    <a href="{{ url_for('cars.search') }}?page={{ page_number - 1 }}&sortBy={{ sortBy }}&model={{ model }}&trim={{ trim }}&drive={{ drive }}">prev</a>
+    <a href="{{ url_for('cars.search') }}?page=0&sortBy={{ sortBy }}&year={{ year }}&trim={{ trim }}&drive={{ drive }}">first</a>
+    <a href="{{ url_for('cars.search') }}?page={{ page_number - 1 }}&sortBy={{ sortBy }}&year={{ year }}&trim={{ trim }}&drive={{ drive }}">prev</a>
     {{ page_number }} of {{ total_pages }}
-    <a href="{{ url_for('cars.search') }}?page={{ page_number + 1 }}&sortBy={{ sortBy }}&model={{ model }}&trim={{ trim }}&drive={{ drive }}">next</a>
-    <a href="{{ url_for('cars.search') }}?page=-1&sortBy={{ sortBy }}&model={{ model }}&trim={{ trim }}&drive={{ drive }}">last</a>
+    <a href="{{ url_for('cars.search') }}?page={{ page_number + 1 }}&sortBy={{ sortBy }}&year={{ year }}&trim={{ trim }}&drive={{ drive }}">next</a>
+    <a href="{{ url_for('cars.search') }}?page=-1&sortBy={{ sortBy }}&year={{ year }}&trim={{ trim }}&drive={{ drive }}">last</a>
   </div>
   {% for car in cars %}
   <article class="cars">
     <header>
-      <a class="action" href="{{ url_for('cars.view') }}?car_id={{ car['id'] }}&page={{ page_number }}&trim={{ trim }}&model={{ model }}&drive={{ drive }}&sortBy={{ sortBy }}">  
+      <a class="action" href="{{ url_for('cars.view') }}?car_id={{ car['id'] }}&page={{ page_number }}&trim={{ trim }}&year={{ year }}&drive={{ drive }}&sortBy={{ sortBy }}">  
         <div>
           {% for name in column_names %}
           {% if name == sortBy %}
-          <h2> {{ name }}: {{ car[name] }} </h2>
+          <h2> {% if name == 'Picture' %} <img src="data:image/jpeg;base64,{{ car[name] }}"/> {% else %} {{ name }}: {{ car[name] }} {% endif %} </h2>
           {% endif %}
           {% endfor %}
           {% for name in column_names %}
-          <div class="about">{{ name }}: {{ car[name] }}</div>
+          <div class="about">{% if name != sortBy %} {% if name == 'Picture' %} <img src="data:image/jpeg;base64,{{ car[name] }}"/> {% else %} {{ name }}: {{ car[name] }} {% endif %}{% endif %}</div>
           {% endfor %}
         </div>
       </a>
@@ -71,10 +71,10 @@
   </article>
   {% endfor %}
   <div class="pagination">
-    <a href="{{ url_for('cars.search') }}?page=0&sortBy={{ sortBy }}&model={{ model }}&trim={{ trim }}&drive={{ drive }}">first</a>
-    <a href="{{ url_for('cars.search') }}?page={{ page_number - 1 }}&sortBy={{ sortBy }}&model={{ model }}&trim={{ trim }}&drive={{ drive }}">prev</a>
+    <a href="{{ url_for('cars.search') }}?page=0&sortBy={{ sortBy }}&year={{ year }}&trim={{ trim }}&drive={{ drive }}">first</a>
+    <a href="{{ url_for('cars.search') }}?page={{ page_number - 1 }}&sortBy={{ sortBy }}&year={{ year }}&trim={{ trim }}&drive={{ drive }}">prev</a>
     {{ page_number }} of {{ total_pages }}
-    <a href="{{ url_for('cars.search') }}?page={{ page_number + 1 }}&sortBy={{ sortBy }}&model={{ model }}&trim={{ trim }}&drive={{ drive }}">next</a>
-    <a href="{{ url_for('cars.search') }}?page=-1&sortBy={{ sortBy }}&model={{ model }}&trim={{ trim }}&drive={{ drive }}">last</a>
+    <a href="{{ url_for('cars.search') }}?page={{ page_number + 1 }}&sortBy={{ sortBy }}&year={{ year }}&trim={{ trim }}&drive={{ drive }}">next</a>
+    <a href="{{ url_for('cars.search') }}?page=-1&sortBy={{ sortBy }}&year={{ year }}&trim={{ trim }}&drive={{ drive }}">last</a>
   </div>
 {% endblock %}

@@ -9,6 +9,10 @@ box.addEventListener("click",function(e){
     console.log(e);
 },true);
 
+function load_image(blob) {
+	var image = document.getElementbyTag
+}
+
 
 function changeAction(sortselect,sortform) {
 
