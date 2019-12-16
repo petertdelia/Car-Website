@@ -2,7 +2,7 @@
 
 {% block header %}
   <h1>{% block title %}Search for Your Car!{% endblock %}</h1>
-  <a class="action" href="{{ url_for('cars.index') }}">Back to Index</a>
+<!--   <a class="action" href="{{ url_for('cars.index') }}">Back to Index</a> -->
 {% endblock %}
 
 {% block content %}
@@ -17,7 +17,7 @@
   </div>
   <div class="filter-by">
     <select class="form-control select" name="year" onchange="this.form.submit()">
-      <option value="">All Years {{ year }}</option>
+      <option value="">All Years </option>
       {% for a in years %}
       <option value="{{ a['year'] }}" {% if a['year'] == year %} selected {% endif %} >{{ a['year'] }}</option>
       {% endfor %}
@@ -25,7 +25,7 @@
   </div>
   <div class="filter-by">
     <select class="form-control select" name="trim" onchange="this.form.submit()">
-      <option value="">All Trims {{trim}}</option>
+      <option value="">All Trims </option>
       {% for a in trims %}
       <option value="{{ a['trim'] }}" {% if a['trim'] == trim %} selected {% endif %}>{{ a['trim'] }}</option>
       {% endfor %}
@@ -41,10 +41,10 @@
   </div>
 </form>
 
-<form action="{{ url_for('cars.text_search_results') }}" method="post">
+<!-- <form action="{{ url_for('cars.text_search_results') }}" method="post">
   <input type="text" name="car" value="search by make, year, trim, or drive">
   <input type="submit" value="Submit">
-</form>
+</form> -->
  <div class="pagination">
     <a href="{{ url_for('cars.search') }}?page=0&sortBy={{ sortBy }}&year={{ year }}&trim={{ trim }}&drive={{ drive }}">first</a>
     <a href="{{ url_for('cars.search') }}?page={{ page_number - 1 }}&sortBy={{ sortBy }}&year={{ year }}&trim={{ trim }}&drive={{ drive }}">prev</a>

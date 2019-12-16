@@ -2,8 +2,8 @@
 
 {% block header %}
   <h1>{% block title %}Here's your car!{% endblock %}</h1>
-  <a class="action" href="{{ url_for('cars.index') }}">Back to Index</a>
-  <a class="action" href="{{ url_for('cars.search') }}?page={{ page_number }}&trim={{ trim }}&model={{ model }}&drive={{ drive }}&sortBy={{ sortBy }}" method="get">Back to Your Search Results</a>
+<!--   <a class="action" href="{{ url_for('cars.index') }}">Back to Index</a> -->
+  <a class="action" href="{{ url_for('cars.search') }}?page={{ page_number }}&trim={{ trim }}&year={{ year }}&drive={{ drive }}&sortBy={{ sortBy }}" method="get">Back to Your Search Results</a>
   <h2>A Single Car</h2>
 {% endblock %}
 

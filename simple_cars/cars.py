@@ -2,14 +2,48 @@ from flask import (
     Blueprint, render_template, request, flash, g, redirect, url_for
 )
 from simple_cars.db import get_db
-from base64 import b64encode
 
 bp = Blueprint('cars', __name__)
 
+def build_sql_statement(sortBy,**kwargs):
+    db = get_db()
+    return_dict = {}
+    cars_query = 'SELECT * FROM cars'
+    cars_query_params = []
+    i = 0
+    for key,value in kwargs.items():
+        db_query = 'SELECT DISTINCT ' + key + ' FROM cars'
+        if value and i == 0:
+            cars_query += " WHERE {0} =?".format(key)
+            cars_query_params.append(value)
+            i += 1
+        elif value:
+            cars_query += " AND {0} =?".format(key)
+            cars_query_params.append(value)
+        query_params = []
+        temp_key = key
+        print(key)
+        j=0
+        for key1,value1 in kwargs.items():
+            if value1 and key1 != temp_key:
+                if j == 0:
+                    db_query += " WHERE {0} =?".format(key1)
+                    query_params.append(value1)
+                    j+=1
+                else:
+                    db_query += " AND {0} =?".format(key1)
+                    query_params.append(value1)
+        print(db_query)
+        search_result = db.execute(db_query,query_params).fetchall()
+        return_dict.update({key + 's' : search_result})
+    cars_query += " ORDER BY {0}".format(sortBy)
+    print(cars_query)
+    car_search_result = db.execute(cars_query, cars_query_params).fetchall()
+    return_dict.update({'cars' : car_search_result})
+    return return_dict
+
 def get_car_info(year,trim,drive,sortBy):
     db = get_db()
-    # def get_columns(*args):
-    #     for arg in args:
 
     if not year and not trim and not drive:
         years = db.execute(
@@ -144,7 +178,7 @@ def get_column_names(table_name):
 
 @bp.route('/')
 def go_to():
-    return redirect(url_for('cars.index'))
+    return redirect(url_for('cars.search'))
 
 @bp.route('/cars', methods=('GET','POST'))
 def index():
@@ -170,20 +204,27 @@ def index():
 def search():
     
     column_names = get_column_names('cars')
-    year = int(request.args.get('year', ''))
+    if request.args.get('year', '') != '':
+        year = int(request.args.get('year', ''))
+    else:
+        year = ''
+
     trim = request.args.get('trim', '') 
     drive = request.args.get('drive', '')
     sortBy = request.args.get('sortBy', 'price')
     page_number = int(request.args.get('page', '0'))
 
-    years, trims, drives, cars = get_car_info(year,trim,drive,sortBy)
-    total_pages = len(cars) // 10
-    if page_number == -1:
-            page_number = len(cars) // 10
-    cars = cars[10 * page_number : 10 * (page_number + 1)]
+    kwargs = build_sql_statement(sortBy,trim=trim,drive=drive,year=year)
 
-    return render_template('car_view/search.html', trims=trims, drives=drives, years=years, 
-        year=year, trim=trim, drive=drive, cars=cars, page_number=page_number, sortBy=sortBy,
+    # years, trims, drives, cars = get_car_info(year,trim,drive,sortBy)
+
+    total_pages = len(kwargs['cars']) // 10
+    if page_number == -1:
+            page_number = len(kwargs['cars']) // 10
+    kwargs['cars'] = kwargs['cars'][10 * page_number : 10 * (page_number + 1)]
+
+    return render_template('car_view/search.html', **kwargs, 
+        year=year, trim=trim, drive=drive, page_number=page_number, sortBy=sortBy,
         total_pages=total_pages, column_names=column_names)
 
 @bp.route('/cars/search_results', methods=('GET','POST'))
@@ -286,7 +327,3 @@ def view():
         year=year, trim=trim, drive=drive, car=car, 
         column_names=column_names, sortBy = sortBy, page_number = page_number)
 
-
-@bp.route('/cars/pictures')
-def picture_view():
-    os.path.join(app.instance_path, 'cars_w_pics.sqlite')
