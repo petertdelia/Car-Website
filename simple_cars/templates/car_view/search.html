@@ -6,7 +6,8 @@
 {% endblock %}
 
 {% block content %}
-<form id="sort-form" action="{{ url_for('cars.search') }}" method="GET">
+  <h2>Sort By:</h2>
+  <form id="sort-form" action="{{ url_for('cars.search') }}" method="GET">
   <div class="sort-by">
     <select class="form-control select" id="sort-select" name="sortBy" onchange="this.form.submit()">
       <option value="price">Reset Sort</option>
@@ -15,6 +16,7 @@
       {% endfor %}
     </select>
   </div>
+  <h2>Filter By:</h2>
   <div class="filter-by">
     <select class="form-control select" name="year" onchange="this.form.submit()">
       <option value="">All Years </option>

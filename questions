@@ -1,5 +1,0 @@
-questions for simple app:
-
-1.) what is the flow of code within the app factory? It seems to me that when a request comes in, it goes to the blueprint page for that request type and url, then executes the code based on that. But how does the '__init__' function get called? I guess I don't understand how the web server works.
-2.) what is with the sql statement, in the flask blog index page, that seems to use undefined aliases? I don't understand this. 
-3.) 

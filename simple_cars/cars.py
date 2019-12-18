@@ -22,7 +22,6 @@ def build_sql_statement(sortBy,**kwargs):
             cars_query_params.append(value)
         query_params = []
         temp_key = key
-        print(key)
         j=0
         for key1,value1 in kwargs.items():
             if value1 and key1 != temp_key:
@@ -33,11 +32,9 @@ def build_sql_statement(sortBy,**kwargs):
                 else:
                     db_query += " AND {0} =?".format(key1)
                     query_params.append(value1)
-        print(db_query)
         search_result = db.execute(db_query,query_params).fetchall()
         return_dict.update({key + 's' : search_result})
     cars_query += " ORDER BY {0}".format(sortBy)
-    print(cars_query)
     car_search_result = db.execute(cars_query, cars_query_params).fetchall()
     return_dict.update({'cars' : car_search_result})
     return return_dict
@@ -219,6 +216,8 @@ def search():
     # years, trims, drives, cars = get_car_info(year,trim,drive,sortBy)
 
     total_pages = len(kwargs['cars']) // 10
+    if page_number > total_pages:
+        page_number = total_pages
     if page_number == -1:
             page_number = len(kwargs['cars']) // 10
     kwargs['cars'] = kwargs['cars'][10 * page_number : 10 * (page_number + 1)]
