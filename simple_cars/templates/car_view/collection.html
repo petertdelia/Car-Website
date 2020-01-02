@@ -6,7 +6,7 @@
   <a href="{{ url_for('auth.login') }}">Login</a> 
   {% else %} 
   <div>Hello, {{ g.user.username }} </div>
-  <div><a href="{{ url_for('cars.search') }}">Back to Search</a></div>
+  <div><a href="{{ url_for('cars.search') }}?page={{ page_number }}&trim={{ trim }}&year={{ year }}&drive={{ drive }}&sortBy={{ sortBy }}">Back to Search</a></div>
   <div><a href="{{ url_for('auth.logout') }}">Logout</a></div>
   {% endif %}
 

@@ -243,13 +243,18 @@ def modify_collection():
 def collection():
     db = get_db()
     column_names = get_column_names('cars')
+    sortBy = request.args.get('sortBy', 'price')
+    page_number = request.args.get('page', '0')
+    year = request.args.get('year', '')
+    trim = request.args.get('trim', '') 
+    drive = request.args.get('drive', '')
     user_id = session.get('user_id')
     cars = db.execute(
         'SELECT * FROM cars JOIN collection ON cars.id = collection.carid WHERE collection.userid = ?', (user_id,)
         ).fetchall()
     print(cars)
     return render_template('car_view/collection.html', 
-        column_names=column_names, cars=cars)
+        column_names=column_names, cars=cars, sortBy=sortBy, page_number=page_number, year=year, trim=trim, drive=drive)
 
 @bp.route('individual_view')
 def single_view():
