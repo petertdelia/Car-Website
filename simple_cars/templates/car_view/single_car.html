@@ -2,9 +2,16 @@
 
 {% block header %}
   <h1>{% block title %}Here's your car!{% endblock %}</h1>
-<!--   <a class="action" href="{{ url_for('cars.index') }}">Back to Index</a> -->
-  <a class="action" href="{{ url_for('cars.search') }}?page={{ page_number }}&trim={{ trim }}&year={{ year }}&drive={{ drive }}&sortBy={{ sortBy }}" method="get">Back to Your Search Results</a>
+  <a class="action" href="{{ url_for('cars.search') }}" method="get">Back to Search</a>
   <h2>A Single Car</h2>
+  <div> {% if g.user is none %}  </div>
+  <a href="{{ url_for('auth.login') }}">Login</a> 
+  {% else %} 
+  <div>Hello, {{ g.user.username }} </div>
+  <div><a href="{{ url_for('cars.collection') }}">See your car collection</a></div>
+  <div><a href="{{ url_for('auth.logout') }}">Logout</a></div>
+  {% endif %}
+  <hr>
 {% endblock %}
 
 {% block content %}
@@ -12,6 +19,13 @@
   <article class="cars">
   <header>
       <div>
+        {% if g.user is not none %}
+        {% if car_in_collection_flag == true %}
+          <a href="{{ url_for('cars.modify_collection', car_id = car['id']) }}"> Remove this car from your collection </a>
+        {% else %}
+          <a href="{{ url_for('cars.modify_collection', car_id = car['id']) }}"> Add this car to your collection </a>
+        {% endif %}
+        {% endif %}
           {% for name in column_names %}
           <div class="about">{% if name == 'Picture' %} <img src="data:image/jpeg;base64,{{ car[name] }}"/> {% else %} {{ name }}: {{ car[name] }} {% endif %}</div>
           {% endfor %}

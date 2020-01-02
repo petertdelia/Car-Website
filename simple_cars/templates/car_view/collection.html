@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Here's your car collection{% endblock %}</h1>
+  <div> {% if g.user is none %}  </div>
+  <a href="{{ url_for('auth.login') }}">Login</a> 
+  {% else %} 
+  <div>Hello, {{ g.user.username }} </div>
+  <div><a href="{{ url_for('cars.search') }}">Back to Search</a></div>
+  <div><a href="{{ url_for('auth.logout') }}">Logout</a></div>
+  {% endif %}
+
+{% endblock %}
+
+{% block content %}
+
+  <hr>
+  {% for car in cars %}
+  <article class="cars">
+    <header>
+      {% if g.user is not none %}
+      {% if is_car_in_collection(car['id']) == true %}
+        <a href="{{ url_for('cars.modify_collection', car_id = car['id']) }}"> Remove this car from your collection </a>
+      {% else %}
+        <a href="{{ url_for('cars.modify_collection', car_id = car['id']) }}"> Add this car to your collection </a>
+      {% endif %}
+      {% endif %}
+      <a class="action" href="{{ url_for('cars.single_view') }}?car_id={{ car['id'] }}&page={{ page_number }}&trim={{ trim }}&year={{ year }}&drive={{ drive }}&sortBy={{ sortBy }}">  
+        <div>
+          {% for name in column_names %}
+          {% if name == sortBy %}
+          <h2> {% if name == 'Picture' %} <img src="data:image/jpeg;base64,{{ car[name] }}"/> {% else %} {{ name }}: {{ car[name] }} {% endif %} </h2>
+          {% endif %}
+          {% endfor %}
+          {% for name in column_names %}
+          <div class="about">{% if name != sortBy %} {% if name == 'Picture' %} <img src="data:image/jpeg;base64,{{ car[name] }}"/> {% else %} {{ name }}: {{ car[name] }} {% endif %}{% endif %}</div>
+
+          {% endfor %}
+        </div>
+      </a>
+    </header>
+  </article>
+  {% if not loop.last %}
+    <hr>
+  {% endif %}
+  {% endfor %}
+
+{% endblock %}

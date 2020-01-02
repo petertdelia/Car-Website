@@ -3,6 +3,7 @@ from flask import (
 )
 import sqlite3, os
 from simple_cars.db import get_db
+from simple_cars.cars import is_car_in_collection
 
 def create_app(test_config=None):
     app = Flask(__name__)
@@ -16,9 +17,11 @@ def create_app(test_config=None):
     except OSError:
         pass
     
-    from . import cars
+    from . import cars, auth
     app.register_blueprint(cars.bp)
-    app.add_url_rule('/cars', endpoint='index')
+    app.register_blueprint(auth.bp)
+    # app.add_url_rule('/cars/search', endpoint='search')
+    app.jinja_env.globals.update(is_car_in_collection=is_car_in_collection)
 
     return app
     
