@@ -2,7 +2,7 @@
 
 {% block header %}
   <h1>{% block title %}Here's your car!{% endblock %}</h1>
-  <a class="action" href="{{ url_for('cars.search') }}" method="get">Back to Search</a>
+  <a class="action" href="{{ url_for('cars.search') }}?page={{ page_number }}&trim={{ trim }}&year={{ year }}&drive={{ drive }}&sortBy={{ sortBy }}" method="get">Back to Search</a>
   <h2>A Single Car</h2>
   <div> {% if g.user is none %}  </div>
   <a href="{{ url_for('auth.login') }}">Login</a> 
