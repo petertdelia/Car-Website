@@ -1,9 +1,9 @@
 from flask import (
-    Flask, render_template, g, current_app, request, flash
+    Flask, render_template, g, current_app, request, flash, redirect, url_for
 )
 import sqlite3, os
 from simple_cars.db import get_db
-from simple_cars.cars import is_car_in_collection
+from simple_cars.cars import is_car_in_collection, search
 
 def create_app(test_config=None):
     app = Flask(__name__)
@@ -17,6 +17,9 @@ def create_app(test_config=None):
     except OSError:
         pass
     
+    @app.route('/')
+    def index():
+        return redirect(url_for('cars.search'))
     from . import cars, auth
     app.register_blueprint(cars.bp)
     app.register_blueprint(auth.bp)
